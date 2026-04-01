@@ -1,22 +1,25 @@
+#
+# (c) 2026, Roberto A. Foglietta <roberto.foglietta@gmail.com>, GPLv2 license
+#     Previous authors: Aun-Ali Zaidi @aunali1, Ajam Azathothas <ajamx101@gmail.com> 
+#
 #  Makefile for libelfrw.a
 
+AR ?= ar
 CC ?= gcc
-CFLAGS += -g0 -pipe -w -Wno-error -Ielfrw
+CFLAGS += -g0 -O1 -pipe -w -Wno-error -Ielfrw
+CFLAGS += -falign-functions=32 $(CFLAGS_EXTRA)
 
 LIBOBJS = elfrw.o elfrw_dyn.o elfrw_ehdr.o elfrw_phdr.o elfrw_rel.o \
           elfrw_shdr.o elfrw_sym.o elfrw_ver.o
 
 libelfrw.a: $(LIBOBJS)
-	ar crs $@ $^
+	$(AR) crs $@ $^
 
-elfrw.o: elfrw.c elfrw.h elfrw_int.h
-elfrw_dyn.o: elfrw_dyn.c elfrw_int.h
-elfrw_ehdr.o: elfrw_ehdr.c elfrw_int.h
-elfrw_phdr.o: elfrw_phdr.c elfrw_int.h
-elfrw_rel.o: elfrw_rel.c elfrw_int.h
-elfrw_shdr.o: elfrw_shdr.c elfrw_int.h
-elfrw_sym.o: elfrw_sym.c elfrw_int.h
-elfrw_ver.o: elfrw_ver.c elfrw_int.h
+%.o: %.c %.h elfrw_int.h
 
 clean:
-	rm -f libelfrw.a $(LIBOBJS)
+	rm -f $(LIBOBJS)
+
+distclean: clean
+	rm -f libelfrw.a
+
